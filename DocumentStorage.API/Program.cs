@@ -1,4 +1,5 @@
 
+using DocumentStorage.API.Configurations;
 using DocumentStorage.API.Data;
 using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
@@ -38,6 +39,7 @@ namespace DocumentStorage.API
                 });
             });
 
+            builder.Services.AddAutoMapper(typeof(AutoMapperConfig));
 
             var app = builder.Build();
 
