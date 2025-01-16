@@ -1,6 +1,7 @@
 
 using DocumentStorage.API.Data;
 using Microsoft.EntityFrameworkCore;
+using Scalar.AspNetCore;
 
 namespace DocumentStorage.API
 {
@@ -44,9 +45,17 @@ namespace DocumentStorage.API
             if (app.Environment.IsDevelopment())
             {
                 app.MapOpenApi();
+                app.MapScalarApiReference(options =>
+                {
+                    options
+                        .WithTitle("Document Storage API")
+                        .WithDefaultHttpClient(ScalarTarget.CSharp, ScalarClient.HttpClient);
+                });
             }
 
             app.UseHttpsRedirection();
+
+            app.UseCors(allowAllPolicy);
 
             app.UseAuthorization();
 
