@@ -1,0 +1,28 @@
+﻿using DocumentStorage.API.Models;
+using System.Text.Json;
+
+namespace DocumentStorage.API.Helpers
+{
+    public static class Extensions
+    {
+        public static IEnumerable<Tag> ConvertStringListToTagIEnumerable(this ICollection<string> strings)
+        {
+            return strings.Select(s => new Tag { Name = s });
+        }
+
+        public static IEnumerable<string> ConvertTagsToStringIEnumerable(this ICollection<Tag> tags)
+        {
+            return tags.Select(s => s.Name);
+        }
+
+        public static string ConvertDictionaryToJSONString(this Dictionary<string, string> dictionary)
+        {
+            return JsonSerializer.Serialize(dictionary);
+        }
+
+        public static Dictionary<string, string> ConvertJSONStringToDictionary(this string jsonString)
+        {
+            return JsonSerializer.Deserialize<Dictionary<string, string>>(jsonString);
+        }
+    }
+}
