@@ -15,14 +15,14 @@ namespace DocumentStorage.API.Helpers
             return tags.Select(s => s.Name);
         }
 
-        public static string ConvertDictionaryToJSONString(this Dictionary<string, string> dictionary)
+        public static string ConvertDictionaryToJSONString(this Dictionary<string, object> dictionary)
         {
             return JsonSerializer.Serialize(dictionary);
         }
 
-        public static Dictionary<string, string> ConvertJSONStringToDictionary(this string jsonString)
+        public static Dictionary<string, object> ConvertJSONStringToDictionary(this string jsonString)
         {
-            return JsonSerializer.Deserialize<Dictionary<string, string>>(jsonString);
+            return JsonSerializer.Deserialize<Dictionary<string, object>>(jsonString);
         }
     }
 }

@@ -1,6 +1,8 @@
 
 using DocumentStorage.API.Configurations;
+using DocumentStorage.API.Contracts;
 using DocumentStorage.API.Data;
+using DocumentStorage.API.Repository;
 using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
 
@@ -40,6 +42,9 @@ namespace DocumentStorage.API
             });
 
             builder.Services.AddAutoMapper(typeof(AutoMapperConfig));
+
+            builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+            builder.Services.AddScoped<IDocumentsRepository, DocumentsRepository>();
 
             var app = builder.Build();
 

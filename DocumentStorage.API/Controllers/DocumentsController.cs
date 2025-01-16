@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using DocumentStorage.API.Contracts;
 using DocumentStorage.API.Data;
 using DocumentStorage.API.DTOs;
 using DocumentStorage.API.Models;
@@ -11,22 +12,32 @@ namespace DocumentStorage.API.Controllers
     [ApiController]
     public class DocumentsController : ControllerBase
     {
-        private readonly DocumentStorageDbContext _dbContext;
         private readonly IMapper _mapper;
+        private readonly IDocumentsRepository _documentsRepository;
 
-        public DocumentsController(DocumentStorageDbContext dbContext, IMapper mapper)
+        public DocumentsController(IMapper mapper, IDocumentsRepository documentsRepository)
         {
-            _dbContext = dbContext;
             _mapper = mapper;
+            _documentsRepository = documentsRepository;
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAll()
+        {
+            var documents = await _documentsRepository.GetAllAsync();
+            var documentDtos = _mapper.Map<List<DocumentDto>>(documents);
+
+            return Ok(documentDtos);
         }
 
         [HttpGet]
         [Route("{id:int}")]
-        public async Task<IActionResult> GetById(int id)
+        public async Task<IActionResult> GetById([FromRoute] int id)
         {
-            var document = await _dbContext.Documents.SingleOrDefaultAsync(d => d.Id == id);
+            // var document = await _dbContext.Documents.SingleOrDefaultAsync(d => d.Id == id);
+            var document = await _documentsRepository.GetAsync(id);
 
-            if (document == null)
+            if (document is null)
             {
                 return BadRequest("No document found!");
             }
@@ -37,16 +48,44 @@ namespace DocumentStorage.API.Controllers
         }   
 
         [HttpPost]
-        public async Task<IActionResult> Post(DocumentDto createDocumentDto)
+        public async Task<IActionResult> Post([FromBody] CreateDocumentDto createDocumentDto)
         {
             var document = _mapper.Map<Document>(createDocumentDto);
 
-            await _dbContext.Documents.AddAsync(document);
-            await _dbContext.SaveChangesAsync();
+            await _documentsRepository.AddAsync(document);
 
             var documentDto = _mapper.Map<DocumentDto>(document);
 
             return CreatedAtAction(nameof(GetById), new { Id = document.Id }, documentDto);
+        }
+
+        [HttpPut("{id:int}")]
+        public async Task<IActionResult> Put([FromRoute] int id, [FromBody] DocumentDto documentDto)
+        {
+            if (id != documentDto.Id)
+            {
+                return BadRequest("Invalid document ID");
+            }
+
+            var document = await _documentsRepository.GetAsync(id);
+
+            if (document is null)
+            {
+                return NotFound();
+            }
+
+            _mapper.Map(documentDto, document);
+
+            try
+            {
+                await _documentsRepository.Update(document);
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                return Conflict();
+            }
+
+            return NoContent();
         }
     }
 }

@@ -9,7 +9,7 @@ namespace DocumentStorage.API.Configurations
     {
         public AutoMapperConfig()
         {
-            CreateMap<DocumentDto, Document>()
+            CreateMap<CreateDocumentDto, Document>()
                 .ForMember(dest => dest.Tags, opt => opt
                     .MapFrom(source => source.Tags!.ConvertStringListToTagIEnumerable()))
                 .ForMember(dest => dest.Data, opt => opt
@@ -20,6 +20,12 @@ namespace DocumentStorage.API.Configurations
                     .MapFrom(source => source.Tags!.ConvertTagsToStringIEnumerable()))
                 .ForMember(dest => dest.Data, opt => opt
                     .MapFrom(source => source.Data.ConvertJSONStringToDictionary()));
+
+            CreateMap<DocumentDto, Document>()
+                .ForMember(dest => dest.Tags, opt => opt
+                    .MapFrom(source => source.Tags!.ConvertStringListToTagIEnumerable()))
+                .ForMember(dest => dest.Data, opt => opt
+                    .MapFrom(source => source.Data.ConvertDictionaryToJSONString()));
 
             CreateMap<Tag, TagDto>().ReverseMap();         
         }

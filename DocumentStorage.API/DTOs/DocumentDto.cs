@@ -1,9 +1,7 @@
 ﻿namespace DocumentStorage.API.DTOs
 {
-    public class DocumentDto
+    public class DocumentDto : DocumentDtoBase
     {
-        public required Dictionary<string, string> Data { get; set; }
-
-        public ICollection<string>? Tags { get; set; }
+        public int Id { get; set; }
     }
 }
