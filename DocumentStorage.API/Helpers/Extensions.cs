@@ -5,12 +5,12 @@ namespace DocumentStorage.API.Helpers
 {
     public static class Extensions
     {
-        public static IEnumerable<Tag> ConvertStringListToTagIEnumerable(this ICollection<string> strings)
+        public static IEnumerable<Tag> ConvertStringCollectionToTagIEnumerable(this ICollection<string> strings)
         {
             return strings.Select(s => new Tag { Name = s });
         }
 
-        public static IEnumerable<string> ConvertTagsToStringIEnumerable(this ICollection<Tag> tags)
+        public static IEnumerable<string> ConvertTagCollectionToStringIEnumerable(this ICollection<Tag> tags)
         {
             return tags.Select(s => s.Name);
         }

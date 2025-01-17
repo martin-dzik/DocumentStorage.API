@@ -31,10 +31,19 @@ namespace DocumentStorage.API.Controllers
         }
 
         [HttpGet]
+        [Route("with-tags")]
+        public async Task<IActionResult> GetAllWithTags()
+        {
+            var documentsWithTags = await _documentsRepository.GetAllWithTagsAsync();
+            var documentWithTagsDtos = _mapper.Map<List<DocumentDto>>(documentsWithTags);
+
+            return Ok(documentWithTagsDtos);
+        }
+
+        [HttpGet]
         [Route("{id:int}")]
         public async Task<IActionResult> GetById([FromRoute] int id)
         {
-            // var document = await _dbContext.Documents.SingleOrDefaultAsync(d => d.Id == id);
             var document = await _documentsRepository.GetAsync(id);
 
             if (document is null)
@@ -45,18 +54,60 @@ namespace DocumentStorage.API.Controllers
             var documentDto = _mapper.Map<DocumentDto>(document);
 
             return Ok(documentDto);
-        }   
+        }
+
+        [HttpGet]
+        [Route("{id:int}/with-tags")]
+        public async Task<IActionResult> GetWithTagsById([FromRoute] int id)
+        {
+            var document = await _documentsRepository.GetWithTagsById(id);
+
+            if (document is null)
+            {
+                return BadRequest("No document found!");
+            }
+
+            var documentDto = _mapper.Map<DocumentDto>(document);
+
+            return Ok(documentDto);
+        }
 
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] CreateDocumentDto createDocumentDto)
         {
             var document = _mapper.Map<Document>(createDocumentDto);
 
+            document = await GetDocumentWithMergedTags(document, createDocumentDto);
+
             await _documentsRepository.AddAsync(document);
 
             var documentDto = _mapper.Map<DocumentDto>(document);
 
             return CreatedAtAction(nameof(GetById), new { Id = document.Id }, documentDto);
+        }
+
+        private async Task<Document> GetDocumentWithMergedTags(Document document, DocumentDtoBase documentDto)
+        {
+            if (document.Tags != null)
+            {
+                IList<Tag> dbTags = new List<Tag>();
+
+                if (documentDto.Tags != null)
+                {
+                    dbTags = await _documentsRepository.GetTagsByNames(documentDto.Tags.ToList());
+                }
+
+                var tags = MergeDocumentTagsWithNewTags(document.Tags, dbTags);
+
+                document.Tags = tags;
+            }
+
+            return document;
+        }
+
+        private static List<Tag> MergeDocumentTagsWithNewTags(ICollection<Tag> incomingTags, IList<Tag> dbTags)
+        {
+            return dbTags.UnionBy(incomingTags, tag => tag.Name).ToList();
         }
 
         [HttpPut("{id:int}")]
@@ -67,7 +118,7 @@ namespace DocumentStorage.API.Controllers
                 return BadRequest("Invalid document ID");
             }
 
-            var document = await _documentsRepository.GetAsync(id);
+            var document = await _documentsRepository.GetWithTagsById(id);
 
             if (document is null)
             {
@@ -75,6 +126,8 @@ namespace DocumentStorage.API.Controllers
             }
 
             _mapper.Map(documentDto, document);
+
+            document = await GetDocumentWithMergedTags(document, documentDto);
 
             try
             {

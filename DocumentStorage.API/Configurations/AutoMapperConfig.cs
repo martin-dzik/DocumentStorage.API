@@ -11,19 +11,19 @@ namespace DocumentStorage.API.Configurations
         {
             CreateMap<CreateDocumentDto, Document>()
                 .ForMember(dest => dest.Tags, opt => opt
-                    .MapFrom(source => source.Tags!.ConvertStringListToTagIEnumerable()))
+                    .MapFrom(source => source.Tags!.ConvertStringCollectionToTagIEnumerable()))
                 .ForMember(dest => dest.Data, opt => opt
                     .MapFrom(source => source.Data.ConvertDictionaryToJSONString()));
 
             CreateMap<Document, DocumentDto>()
                 .ForMember(dest => dest.Tags, opt => opt
-                    .MapFrom(source => source.Tags!.ConvertTagsToStringIEnumerable()))
+                    .MapFrom(source => source.Tags!.ConvertTagCollectionToStringIEnumerable()))
                 .ForMember(dest => dest.Data, opt => opt
                     .MapFrom(source => source.Data.ConvertJSONStringToDictionary()));
 
             CreateMap<DocumentDto, Document>()
                 .ForMember(dest => dest.Tags, opt => opt
-                    .MapFrom(source => source.Tags!.ConvertStringListToTagIEnumerable()))
+                    .MapFrom(source => source.Tags!.ConvertStringCollectionToTagIEnumerable()))
                 .ForMember(dest => dest.Data, opt => opt
                     .MapFrom(source => source.Data.ConvertDictionaryToJSONString()));
 
