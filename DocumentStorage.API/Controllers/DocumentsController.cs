@@ -10,6 +10,7 @@ namespace DocumentStorage.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [FormatFilter]
     public class DocumentsController : ControllerBase
     {
         private readonly IMapper _mapper;
@@ -22,6 +23,7 @@ namespace DocumentStorage.API.Controllers
         }
 
         [HttpGet]
+        [Route("all.{format}")]
         public async Task<IActionResult> GetAll()
         {
             var documents = await _documentsRepository.GetAllAsync();
@@ -31,7 +33,7 @@ namespace DocumentStorage.API.Controllers
         }
 
         [HttpGet]
-        [Route("with-tags")]
+        [Route("all.{format}/with-tags")]
         public async Task<IActionResult> GetAllWithTags()
         {
             var documentsWithTags = await _documentsRepository.GetAllWithTagsAsync();
@@ -41,7 +43,7 @@ namespace DocumentStorage.API.Controllers
         }
 
         [HttpGet]
-        [Route("{id:int}")]
+        [Route("{id:int}.{format}")]       
         public async Task<IActionResult> GetById([FromRoute] int id)
         {
             var document = await _documentsRepository.GetAsync(id);
@@ -57,7 +59,7 @@ namespace DocumentStorage.API.Controllers
         }
 
         [HttpGet]
-        [Route("{id:int}/with-tags")]
+        [Route("{id:int}.{format}/with-tags")]
         public async Task<IActionResult> GetWithTagsById([FromRoute] int id)
         {
             var document = await _documentsRepository.GetWithTagsById(id);

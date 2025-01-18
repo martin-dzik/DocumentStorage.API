@@ -11,21 +11,15 @@ namespace DocumentStorage.API.Configurations
         {
             CreateMap<CreateDocumentDto, Document>()
                 .ForMember(dest => dest.Tags, opt => opt
-                    .MapFrom(source => source.Tags!.ConvertStringCollectionToTagIEnumerable()))
-                .ForMember(dest => dest.Data, opt => opt
-                    .MapFrom(source => source.Data.ConvertDictionaryToJSONString()));
+                    .MapFrom(source => source.Tags!.ConvertStringCollectionToTagIEnumerable()));
 
             CreateMap<Document, DocumentDto>()
                 .ForMember(dest => dest.Tags, opt => opt
-                    .MapFrom(source => source.Tags!.ConvertTagCollectionToStringIEnumerable()))
-                .ForMember(dest => dest.Data, opt => opt
-                    .MapFrom(source => source.Data.ConvertJSONStringToDictionary()));
-
+                    .MapFrom(source => source.Tags!.ConvertTagCollectionToStringIEnumerable()));
+   
             CreateMap<DocumentDto, Document>()
                 .ForMember(dest => dest.Tags, opt => opt
-                    .MapFrom(source => source.Tags!.ConvertStringCollectionToTagIEnumerable()))
-                .ForMember(dest => dest.Data, opt => opt
-                    .MapFrom(source => source.Data.ConvertDictionaryToJSONString()));
+                    .MapFrom(source => source.Tags!.ConvertStringCollectionToTagIEnumerable()));
 
             CreateMap<Tag, TagDto>().ReverseMap();         
         }

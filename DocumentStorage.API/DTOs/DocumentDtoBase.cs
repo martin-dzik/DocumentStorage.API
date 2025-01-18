@@ -1,9 +1,15 @@
-﻿namespace DocumentStorage.API.DTOs
+﻿using System.Runtime.Serialization;
+
+namespace DocumentStorage.API.DTOs
 {
+    [DataContract]
     public abstract class DocumentDtoBase
     {
-        public required Dictionary<string, object> Data { get; set; }
 
+        [DataMember]
+        public required string Data { get; set; }
+
+        [DataMember]
         public ICollection<string>? Tags { get; set; }
     }
 }
