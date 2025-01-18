@@ -23,12 +23,18 @@ namespace DocumentStorage.API.Repository
 
         public async Task<IList<T>> GetAllAsync()
         {
-            return await _dbContext.Set<T>().ToListAsync();
+            return await _dbContext
+                .Set<T>()
+                .AsNoTracking()
+                .ToListAsync();
         }
 
         public async Task<T?> GetAsync(int id)
         {
-            return await _dbContext.Set<T>().FindAsync(id);
+            return await _dbContext
+                .Set<T>()
+                .AsNoTracking()
+                .FirstOrDefaultAsync();
         }
 
         public async Task Update(T item)

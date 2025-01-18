@@ -13,22 +13,42 @@ namespace DocumentStorage.API.Repository
 
         public async Task<IList<Document>> GetAllWithTagsAsync()
         {
-            return await _dbContext.Documents.Include(d => d.Tags).ToListAsync();
+            return await _dbContext.Documents
+                .Include(d => d.Tags)
+                .AsNoTracking()
+                .ToListAsync();
         }
 
         public async Task<IList<Tag>> GetAllTagsAsync()
         {
-            return await _dbContext.Tags.ToListAsync();
+            return await _dbContext.Tags
+                .AsNoTracking()
+                .ToListAsync();
         }
 
         public async Task<IList<Tag>> GetTagsByNames(IList<string> tagNames)
         {
-            return await _dbContext.Tags.Where(t => tagNames.Contains(t.Name)).ToListAsync();
+            return await _dbContext.Tags
+                .Where(t => tagNames.Contains(t.Name))
+                .AsNoTracking()
+                .ToListAsync();
         }
 
-        public async Task<Document?> GetWithTagsById(int id)
+        public async Task<Document?> GetWithTagsByIdAsync(int id)
         {
-            return await _dbContext.Documents.Where(d => d.Id == id).Include(d => d.Tags).FirstOrDefaultAsync();
+            return await _dbContext.Documents
+                .Where(d => d.Id == id)
+                .Include(d => d.Tags)
+                .FirstOrDefaultAsync();
+        }
+
+        public async Task<Document?> GetWithTagsByIdAsNoTrackingAsync(int id)
+        {
+            return await _dbContext.Documents
+                .Where(d => d.Id == id)
+                .Include(d => d.Tags)
+                .AsNoTracking()
+                .FirstOrDefaultAsync();
         }
     }
 }

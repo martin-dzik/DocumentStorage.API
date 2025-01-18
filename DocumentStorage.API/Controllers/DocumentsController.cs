@@ -62,7 +62,7 @@ namespace DocumentStorage.API.Controllers
         [Route("{id:int}.{format}/with-tags")]
         public async Task<IActionResult> GetWithTagsById([FromRoute] int id)
         {
-            var document = await _documentsRepository.GetWithTagsById(id);
+            var document = await _documentsRepository.GetWithTagsByIdAsNoTrackingAsync(id);
 
             if (document is null)
             {
@@ -85,7 +85,7 @@ namespace DocumentStorage.API.Controllers
 
             var documentDto = _mapper.Map<DocumentDto>(document);
 
-            return CreatedAtAction(nameof(GetById), new { Id = document.Id }, documentDto);
+            return CreatedAtAction(nameof(GetById), new { Id = document.Id, format = "json" }, documentDto);
         }
 
         private async Task<Document> GetDocumentWithMergedTags(Document document, DocumentDtoBase documentDto)
@@ -120,7 +120,7 @@ namespace DocumentStorage.API.Controllers
                 return BadRequest("Invalid document ID");
             }
 
-            var document = await _documentsRepository.GetWithTagsById(id);
+            var document = await _documentsRepository.GetWithTagsByIdAsync(id);
 
             if (document is null)
             {

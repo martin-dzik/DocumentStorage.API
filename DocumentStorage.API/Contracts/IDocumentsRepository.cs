@@ -10,6 +10,8 @@ namespace DocumentStorage.API.Contracts
 
         Task<IList<Tag>> GetTagsByNames(IList<string> tagNames);
 
-        Task<Document?> GetWithTagsById(int id);
+        Task<Document?> GetWithTagsByIdAsync(int id);
+
+        Task<Document?> GetWithTagsByIdAsNoTrackingAsync(int id);
     }
 }
