@@ -2,6 +2,7 @@
 using DocumentStorage.API.Contracts;
 using DocumentStorage.API.Data;
 using DocumentStorage.API.DTOs;
+using DocumentStorage.API.Helpers;
 using DocumentStorage.API.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -79,37 +80,14 @@ namespace DocumentStorage.API.Controllers
         {
             var document = _mapper.Map<Document>(createDocumentDto);
 
-            document = await GetDocumentWithMergedTags(document, createDocumentDto);
+            var dbTags = await _documentsRepository.GetTagsByNames(createDocumentDto.Tags!.ToList());
+            document = document.GetDocumentWithMergedTags(dbTags);
 
             await _documentsRepository.AddAsync(document);
 
             var documentDto = _mapper.Map<DocumentDto>(document);
 
             return CreatedAtAction(nameof(GetById), new { Id = document.Id, format = "json" }, documentDto);
-        }
-
-        private async Task<Document> GetDocumentWithMergedTags(Document document, DocumentDtoBase documentDto)
-        {
-            if (document.Tags != null)
-            {
-                IList<Tag> dbTags = new List<Tag>();
-
-                if (documentDto.Tags != null)
-                {
-                    dbTags = await _documentsRepository.GetTagsByNames(documentDto.Tags.ToList());
-                }
-
-                var tags = MergeDocumentTagsWithNewTags(document.Tags, dbTags);
-
-                document.Tags = tags;
-            }
-
-            return document;
-        }
-
-        private static List<Tag> MergeDocumentTagsWithNewTags(ICollection<Tag> incomingTags, IList<Tag> dbTags)
-        {
-            return dbTags.UnionBy(incomingTags, tag => tag.Name).ToList();
         }
 
         [HttpPut("{id:int}")]
@@ -127,9 +105,11 @@ namespace DocumentStorage.API.Controllers
                 return NotFound();
             }
 
+            var dbTags = await _documentsRepository.GetTagsByNames(documentDto.Tags!.ToList());
+
             _mapper.Map(documentDto, document);
 
-            document = await GetDocumentWithMergedTags(document, documentDto);
+            document = document.GetDocumentWithMergedTags(dbTags);
 
             try
             {

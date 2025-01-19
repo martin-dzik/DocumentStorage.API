@@ -24,5 +24,24 @@ namespace DocumentStorage.API.Helpers
         {
             return JsonSerializer.Deserialize<Dictionary<string, object>>(jsonString);
         }
+
+        public static Document GetDocumentWithMergedTags(this Document document, IList<Tag> tags)
+        {
+            if (document.Tags != null)
+            {
+                var newTags = MergeDocumentTagsWithNewTags(document.Tags, tags);
+
+                document.Tags = newTags;
+            }
+
+            return document;
+        }
+
+        public static List<Tag> MergeDocumentTagsWithNewTags(ICollection<Tag> incomingTags, IList<Tag> dbTags)
+        {
+
+
+            return dbTags.UnionBy(incomingTags, tag => tag.Name).ToList();
+        }
     }
 }

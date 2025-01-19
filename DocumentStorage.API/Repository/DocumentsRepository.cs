@@ -30,7 +30,6 @@ namespace DocumentStorage.API.Repository
         {
             return await _dbContext.Tags
                 .Where(t => tagNames.Contains(t.Name))
-                .AsNoTracking()
                 .ToListAsync();
         }
 
