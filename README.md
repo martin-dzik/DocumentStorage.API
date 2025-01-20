@@ -1,6 +1,6 @@
 # DocumentStorage.API
 
-Simple API for document DocumentStorage
+Simple API for DocumentStorage
 
 ## API
 
