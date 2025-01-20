@@ -39,8 +39,6 @@ namespace DocumentStorage.API.Helpers
 
         public static List<Tag> MergeDocumentTagsWithNewTags(ICollection<Tag> incomingTags, IList<Tag> dbTags)
         {
-
-
             return dbTags.UnionBy(incomingTags, tag => tag.Name).ToList();
         }
     }
