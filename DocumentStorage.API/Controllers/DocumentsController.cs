@@ -80,7 +80,7 @@ namespace DocumentStorage.API.Controllers
         {
             var document = _mapper.Map<Document>(createDocumentDto);
 
-            var dbTags = await _documentsRepository.GetTagsByNames(createDocumentDto.Tags!.ToList());
+            var dbTags = await _documentsRepository.GetTagsByNamesAsync(createDocumentDto.Tags!.ToList());
             document = document.GetDocumentWithMergedTags(dbTags);
 
             await _documentsRepository.AddAsync(document);
@@ -105,7 +105,7 @@ namespace DocumentStorage.API.Controllers
                 return NotFound();
             }
 
-            var dbTags = await _documentsRepository.GetTagsByNames(documentDto.Tags!.ToList());
+            var dbTags = await _documentsRepository.GetTagsByNamesAsync(documentDto.Tags!.ToList());
 
             _mapper.Map(documentDto, document);
 

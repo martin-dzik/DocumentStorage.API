@@ -26,7 +26,7 @@ namespace DocumentStorage.API.Repository
                 .ToListAsync();
         }
 
-        public async Task<IList<Tag>> GetTagsByNames(IList<string> tagNames)
+        public async Task<IList<Tag>> GetTagsByNamesAsync(IList<string> tagNames)
         {
             return await _dbContext.Tags
                 .Where(t => tagNames.Contains(t.Name))

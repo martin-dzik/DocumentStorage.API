@@ -57,7 +57,7 @@ namespace DocumentStorage.API.Tests.Controllers
             var dbTags = A.Fake<IList<Tag>>();
 
             A.CallTo(() => _mapper.Map<Document>(createDocumentDto)).Returns(document);
-            A.CallTo(() => _documentsRepository.GetTagsByNames(createDocumentDto.Tags!.ToList())).Returns(Task.FromResult(dbTags));
+            A.CallTo(() => _documentsRepository.GetTagsByNamesAsync(createDocumentDto.Tags!.ToList())).Returns(Task.FromResult(dbTags));
             
             A.CallTo(() => _documentsRepository.AddAsync(document)).Returns(Task.FromResult(document));
             A.CallTo(() => _mapper.Map<DocumentDto>(document)).Returns(documentDto);

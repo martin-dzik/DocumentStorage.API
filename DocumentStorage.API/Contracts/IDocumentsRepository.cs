@@ -8,7 +8,7 @@ namespace DocumentStorage.API.Contracts
 
         Task<IList<Tag>> GetAllTagsAsync();
 
-        Task<IList<Tag>> GetTagsByNames(IList<string> tagNames);
+        Task<IList<Tag>> GetTagsByNamesAsync(IList<string> tagNames);
 
         Task<Document?> GetWithTagsByIdAsync(int id);
 
