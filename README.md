@@ -7,7 +7,7 @@ Simple API for DocumentStorage
 - supports JSON for sending data
 - supports JSON and XML as return types
 - for all supported functions look at `DocumentStorage.API/Controllers/DocumentsController.cs`
-- `Scalar` included for testing - starts on application run
+- `Scalar` included for testing - it will open on application run
 
 ## Instructions
 
