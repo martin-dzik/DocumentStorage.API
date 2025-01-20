@@ -17,7 +17,7 @@ Simple API for document DocumentStorage
 4. Run migrations - run command (`Update-Database`) in Package manager console
 
 ## Test functionality
-1. Run the application (Scalar will be open)
+1. Run the application (Scalar will be opened)
 2. Test functions
 
 ## Message format
