@@ -33,8 +33,7 @@ namespace DocumentStorage.API.Repository
         {
             return await _dbContext
                 .Set<T>()
-                .AsNoTracking()
-                .FirstOrDefaultAsync();
+                .FindAsync(id);        
         }
 
         public async Task Update(T item)
